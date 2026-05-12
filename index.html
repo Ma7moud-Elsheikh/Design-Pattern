@@ -1,0 +1,1969 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Design Patterns — Interview Reference</title>
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&family=Syne:wght@400;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="main.css" />
+    </head>
+    <body>
+        <div class="progress-bar-wrap"><div class="progress-bar" id="progressBar"></div></div>
+
+        <header>
+            <div class="header-badge">GoF 23 + JS Patterns · 27 Total · Interview Reference</div>
+            <h1>
+                <span class="title-cr">Design</span>
+                <span class="title-st">Pat</span>
+                <span class="title-bh">terns</span>
+            </h1>
+            <p>// Simple examples · Complete reference · Interview ready</p>
+        </header>
+
+        <div class="search-wrap">
+            <div class="search-inner">
+                <input
+                    type="text"
+                    id="searchInput"
+                    placeholder="🔍  Search patterns... (e.g. Singleton, Observer)"
+                />
+            </div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-btn all active" data-cat="all">All 27</button>
+            <button class="tab-btn cr" data-cat="cr">🟦 Creational (5)</button>
+            <button class="tab-btn st" data-cat="st">🟩 Structural (7)</button>
+            <button class="tab-btn bh" data-cat="bh">🟨 Behavioral (11)</button>
+            <button class="tab-btn js" data-cat="js">⬜ JS Patterns (4)</button>
+        </div>
+
+        <main id="mainContent">
+            <!-- ══════════════════════════════════════════════
+     🟦  CREATIONAL PATTERNS
+══════════════════════════════════════════════ -->
+            <div class="section-header" data-cat-header="cr">
+                <span class="section-icon">🟦</span>
+                <h2 style="color: var(--cr)">Creational Patterns</h2>
+                <span class="section-count">5 patterns</span>
+            </div>
+
+            <!-- 1. Singleton -->
+            <div class="card cr" data-cat="cr" data-name="singleton">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">01</span>
+                    <span class="card-title">Singleton</span>
+                    <span class="card-tag">CREATIONAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When you need exactly one object in your entire app — like app
+                                    settings or the logged-in user. Creating multiple instances
+                                    would cause conflicts.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>App settings (theme, language)</li>
+                                    <li>Currently logged-in user</li>
+                                    <li>Logger / error tracking</li>
+                                    <li>Database connection pool</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — two different instances!
+                            </div>
+                            <pre><span class="cm">// We made two separate user config objects</span>
+<span class="kw">const</span> user1 = { name: <span class="str">"Ali"</span>, theme: <span class="str">"dark"</span>  };
+<span class="kw">const</span> user2 = { name: <span class="str">"Ali"</span>, theme: <span class="str">"light"</span> };
+<span class="cm">// Which one is the real config? 🤔</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Singleton — always one instance
+                            </div>
+                            <pre><span class="kw">const</span> <span class="fn">CurrentUser</span> = (<span class="kw">function</span>() {
+  <span class="kw">let</span> instance;
+  <span class="kw">return</span> {
+    <span class="fn">getInstance</span>() {
+      <span class="kw">if</span> (!instance) {
+        instance = { name: <span class="str">"Ali"</span>, theme: <span class="str">"dark"</span> };
+      }
+      <span class="kw">return</span> instance;
+    }
+  };
+})();
+
+<span class="kw">const</span> a = CurrentUser.<span class="fn">getInstance</span>();
+<span class="kw">const</span> b = CurrentUser.<span class="fn">getInstance</span>();
+a.theme = <span class="str">"light"</span>;
+console.<span class="fn">log</span>(b.theme); <span class="cm">// "light" ← same object ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-singleton"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. Factory Method -->
+            <div class="card cr" data-cat="cr" data-name="factory method">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">02</span>
+                    <span class="card-title">Factory Method</span>
+                    <span class="card-tag">CREATIONAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    Instead of writing 'new' everywhere, you tell the factory 'give
+                                    me a user of this type' and it handles everything. Your code
+                                    never needs to know the details.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Different user types (Admin / Guest / Member)</li>
+                                    <li>Different payment methods (Card / Wallet / Cash)</li>
+                                    <li>Different notifications (Email / SMS)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — if/else everywhere
+                            </div>
+                            <pre><span class="cm">// Want to add a new type? Must edit everywhere 😩</span>
+<span class="kw">function</span> <span class="fn">createUser</span>(type) {
+  <span class="kw">if</span> (type === <span class="str">"admin"</span>)  <span class="kw">return new</span> <span class="fn">Admin</span>();
+  <span class="kw">if</span> (type === <span class="str">"guest"</span>)  <span class="kw">return new</span> <span class="fn">Guest</span>();
+  <span class="cm">// Must come here every time you add a new type</span>
+}</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Factory — flexible and extensible
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">AdminUser</span>  { <span class="fn">greet</span>() { <span class="kw">return</span> <span class="str">"Hi Admin 👑"</span>;  } }
+<span class="kw">class</span> <span class="fn">GuestUser</span>  { <span class="fn">greet</span>() { <span class="kw">return</span> <span class="str">"Hi Guest 👤"</span>;  } }
+<span class="kw">class</span> <span class="fn">MemberUser</span> { <span class="fn">greet</span>() { <span class="kw">return</span> <span class="str">"Hi Member ⭐"</span>; } }
+
+<span class="kw">function</span> <span class="fn">UserFactory</span>(type) {
+  <span class="kw">const</span> users = {
+    admin:  <span class="fn">AdminUser</span>,
+    guest:  <span class="fn">GuestUser</span>,
+    member: <span class="fn">MemberUser</span>
+  };
+  <span class="kw">return new</span> users[type]();
+}
+
+<span class="kw">const</span> user = <span class="fn">UserFactory</span>(<span class="str">"admin"</span>);
+user.<span class="fn">greet</span>(); <span class="cm">// "Hi Admin 👑" ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-factory-method"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3. Abstract Factory -->
+            <div class="card cr" data-cat="cr" data-name="abstract factory">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">03</span>
+                    <span class="card-title">Abstract Factory</span>
+                    <span class="card-tag">CREATIONAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When creating a group of objects that must match each other —
+                                    like a user's profile page where the button, card, and badge
+                                    must all share the same theme.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Dark / Light theme components</li>
+                                    <li>Arabic / English UI sets</li>
+                                    <li>Mobile / Desktop layouts</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — mismatched components!
+                            </div>
+                            <pre><span class="cm">// Dark button with Light card = looks wrong 😬</span>
+<span class="kw">const</span> btn  = <span class="kw">new</span> <span class="fn">DarkButton</span>();
+<span class="kw">const</span> card = <span class="kw">new</span> <span class="fn">LightCard</span>(); <span class="cm">// ❌ mismatch!</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Abstract Factory — matching family
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">DarkTheme</span> {
+  <span class="fn">button</span>() { <span class="kw">return</span> <span class="str">"🖤 Dark Button"</span>; }
+  <span class="fn">card</span>()   { <span class="kw">return</span> <span class="str">"🖤 Dark Card"</span>;   }
+}
+<span class="kw">class</span> <span class="fn">LightTheme</span> {
+  <span class="fn">button</span>() { <span class="kw">return</span> <span class="str">"🤍 Light Button"</span>; }
+  <span class="fn">card</span>()   { <span class="kw">return</span> <span class="str">"🤍 Light Card"</span>;   }
+}
+
+<span class="kw">function</span> <span class="fn">renderProfile</span>(theme) {
+  console.<span class="fn">log</span>(theme.<span class="fn">button</span>()); <span class="cm">// always consistent ✅</span>
+  console.<span class="fn">log</span>(theme.<span class="fn">card</span>());
+}
+
+<span class="fn">renderProfile</span>(<span class="kw">new</span> <span class="fn">DarkTheme</span>()); <span class="cm">// everything is dark ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-abstract-factory"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. Builder -->
+            <div class="card cr" data-cat="cr" data-name="builder">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">04</span>
+                    <span class="card-title">Builder</span>
+                    <span class="card-tag">CREATIONAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When creating an object with many optional properties — like a
+                                    user profile. Instead of sending 10 parameters to the
+                                    constructor, you build it step by step.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Build User Profile step by step</li>
+                                    <li>Configure search filters</li>
+                                    <li>Build an email message</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — too many confusing parameters
+                            </div>
+                            <pre><span class="cm">// What does each parameter mean? 😵</span>
+<span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ali"</span>, <span class="str">"ali@email.com"</span>, <span class="num">25</span>, <span class="kw">true</span>, <span class="kw">false</span>, <span class="str">"Cairo"</span>);</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Builder — readable step-by-step
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">UserBuilder</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.user = { name }; }
+  <span class="fn">setEmail</span>(e)  { <span class="kw">this</span>.user.email = e;    <span class="kw">return this</span>; }
+  <span class="fn">setAge</span>(a)    { <span class="kw">this</span>.user.age = a;      <span class="kw">return this</span>; }
+  <span class="fn">setCity</span>(c)   { <span class="kw">this</span>.user.city = c;     <span class="kw">return this</span>; }
+  <span class="fn">setAdmin</span>()   { <span class="kw">this</span>.user.isAdmin=<span class="kw">true</span>; <span class="kw">return this</span>; }
+  <span class="fn">build</span>()      { <span class="kw">return this</span>.user; }
+}
+
+<span class="kw">const</span> user = <span class="kw">new</span> <span class="fn">UserBuilder</span>(<span class="str">"Ali"</span>)
+  .<span class="fn">setEmail</span>(<span class="str">"ali@email.com"</span>)
+  .<span class="fn">setAge</span>(<span class="num">25</span>)
+  .<span class="fn">setCity</span>(<span class="str">"Cairo"</span>)
+  .<span class="fn">setAdmin</span>()
+  .<span class="fn">build</span>();
+<span class="cm">// Crystal clear! ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-builder"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. Prototype -->
+            <div class="card cr" data-cat="cr" data-name="prototype">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">05</span>
+                    <span class="card-title">Prototype</span>
+                    <span class="card-tag">CREATIONAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When you have an existing user and want a copy with minor
+                                    changes — instead of rebuilding from scratch, just clone it and
+                                    change what's different.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Copy user settings for a new user</li>
+                                    <li>Duplicate profile</li>
+                                    <li>Template accounts</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — repeating same data
+                            </div>
+                            <pre><span class="cm">// Ali and Ahmed have almost the same settings 😩</span>
+<span class="kw">const</span> ali   = { theme:<span class="str">"dark"</span>, lang:<span class="str">"ar"</span>, role:<span class="str">"user"</span> };
+<span class="kw">const</span> ahmed = { theme:<span class="str">"dark"</span>, lang:<span class="str">"ar"</span>, role:<span class="str">"admin"</span> };</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Prototype — clone and change what's needed
+                            </div>
+                            <pre><span class="kw">const</span> defaultUser = {
+  theme: <span class="str">"dark"</span>,
+  lang:  <span class="str">"ar"</span>,
+  role:  <span class="str">"user"</span>,
+  <span class="fn">clone</span>() { <span class="kw">return</span> { ...<span class="kw">this</span> }; }
+};
+
+<span class="kw">const</span> ali   = defaultUser.<span class="fn">clone</span>();
+<span class="kw">const</span> ahmed = defaultUser.<span class="fn">clone</span>();
+ahmed.role = <span class="str">"admin"</span>; <span class="cm">// Change only what you need ✅</span>
+
+<span class="cm">// Or with Object.create</span>
+<span class="kw">const</span> omar = Object.<span class="fn">create</span>(defaultUser);
+omar.name = <span class="str">"Omar"</span>; <span class="cm">// inherits everything from defaultUser ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-prototype"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════
+     🟩  STRUCTURAL PATTERNS
+══════════════════════════════════════════════ -->
+            <div class="section-header" data-cat-header="st">
+                <span class="section-icon">🟩</span>
+                <h2 style="color: var(--st)">Structural Patterns</h2>
+                <span class="section-count">7 patterns</span>
+            </div>
+
+            <!-- 6. Adapter -->
+            <div class="card st" data-cat="st" data-name="adapter">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">06</span>
+                    <span class="card-title">Adapter</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You have an old API that returns user data in one shape, and
+                                    your new code expects a different shape. Adapter translates
+                                    between them without changing either side.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Connect old API to new code</li>
+                                    <li>Transform response shape</li>
+                                    <li>Use a library without modifying it</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — two different shapes
+                            </div>
+                            <pre><span class="cm">// Old API returns this</span>
+<span class="kw">const</span> oldUser = { full_name: <span class="str">"Ali Ahmed"</span>, usr_age: <span class="num">25</span> };
+
+<span class="cm">// Your new code expects this</span>
+<span class="cm">// { name: "Ali Ahmed", age: 25 } ← won't work! 😩</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Adapter — translate between shapes
+                            </div>
+                            <pre><span class="kw">function</span> <span class="fn">UserAdapter</span>(oldUser) {
+  <span class="kw">return</span> {
+    name: oldUser.full_name,
+    age:  oldUser.usr_age
+  };
+}
+
+<span class="kw">const</span> oldUser = { full_name: <span class="str">"Ali Ahmed"</span>, usr_age: <span class="num">25</span> };
+<span class="kw">const</span> user    = <span class="fn">UserAdapter</span>(oldUser);
+console.<span class="fn">log</span>(user.name); <span class="cm">// "Ali Ahmed" ✅</span>
+console.<span class="fn">log</span>(user.age);  <span class="cm">// 25 ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-adapter"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 7. Bridge -->
+            <div class="card st" data-cat="st" data-name="bridge">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">07</span>
+                    <span class="card-title">Bridge</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You have User Notifications — can be sent via Email or SMS, and
+                                    can be Alert or Reminder types. Instead of one class per
+                                    combination, separate them.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Notifications with different types and channels</li>
+                                    <li>Export files in different formats</li>
+                                    <li>Avoid N×M class explosion</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — class per combination
+                            </div>
+                            <pre><span class="cm">// EmailAlert, SMSAlert, EmailReminder, SMSReminder... 😩</span>
+<span class="kw">class</span> <span class="fn">EmailAlert</span>    {}
+<span class="kw">class</span> <span class="fn">SMSAlert</span>      {}
+<span class="kw">class</span> <span class="fn">EmailReminder</span> {} <span class="cm">// Grows endlessly!</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Bridge — separate type from channel
+                            </div>
+                            <pre><span class="cm">// Channel (implementation)</span>
+<span class="kw">const</span> Email = { <span class="fn">send</span>(msg) { console.<span class="fn">log</span>(<span class="str">"📧 Email: "</span>+msg); } };
+<span class="kw">const</span> SMS   = { <span class="fn">send</span>(msg) { console.<span class="fn">log</span>(<span class="str">"📱 SMS: "</span>+msg);   } };
+
+<span class="cm">// Type (abstraction)</span>
+<span class="kw">class</span> <span class="fn">Alert</span> {
+  <span class="fn">constructor</span>(sender) { <span class="kw">this</span>.sender = sender; }
+  <span class="fn">notify</span>(user) { <span class="kw">this</span>.sender.<span class="fn">send</span>(<span class="str">"🚨 Alert for: "</span>+user); }
+}
+<span class="kw">class</span> <span class="fn">Reminder</span> {
+  <span class="fn">constructor</span>(sender) { <span class="kw">this</span>.sender = sender; }
+  <span class="fn">notify</span>(user) { <span class="kw">this</span>.sender.<span class="fn">send</span>(<span class="str">"⏰ Reminder for: "</span>+user); }
+}
+
+<span class="kw">new</span> <span class="fn">Alert</span>(Email).<span class="fn">notify</span>(<span class="str">"Ali"</span>);    <span class="cm">// 📧 Email Alert ✅</span>
+<span class="kw">new</span> <span class="fn">Reminder</span>(SMS).<span class="fn">notify</span>(<span class="str">"Ali"</span>); <span class="cm">// 📱 SMS Reminder ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-bridge"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 8. Composite -->
+            <div class="card st" data-cat="st" data-name="composite">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">08</span>
+                    <span class="card-title">Composite</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    A user has individual permissions and permission groups. When
+                                    checking access, you should handle both the same way without
+                                    distinguishing.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Permission system (user / group)</li>
+                                    <li>Menu with submenus</li>
+                                    <li>Folder containing files and subfolders</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Composite — uniform interface
+                            </div>
+                            <pre><span class="cm">// Individual permission</span>
+<span class="kw">class</span> <span class="fn">Permission</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">show</span>() { console.<span class="fn">log</span>(<span class="str">"  🔑 "</span> + <span class="kw">this</span>.name); }
+}
+
+<span class="cm">// Group of permissions</span>
+<span class="kw">class</span> <span class="fn">PermissionGroup</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name=name; <span class="kw">this</span>.items=[]; }
+  <span class="fn">add</span>(p) { <span class="kw">this</span>.items.<span class="fn">push</span>(p); <span class="kw">return this</span>; }
+  <span class="fn">show</span>() {
+    console.<span class="fn">log</span>(<span class="str">"📁 "</span> + <span class="kw">this</span>.name);
+    <span class="kw">this</span>.items.<span class="fn">forEach</span>(p => p.<span class="fn">show</span>());
+  }
+}
+
+<span class="kw">const</span> admin = <span class="kw">new</span> <span class="fn">PermissionGroup</span>(<span class="str">"Admin"</span>)
+  .<span class="fn">add</span>(<span class="kw">new</span> <span class="fn">Permission</span>(<span class="str">"read"</span>))
+  .<span class="fn">add</span>(<span class="kw">new</span> <span class="fn">Permission</span>(<span class="str">"write"</span>))
+  .<span class="fn">add</span>(<span class="kw">new</span> <span class="fn">Permission</span>(<span class="str">"delete"</span>));
+admin.<span class="fn">show</span>(); <span class="cm">// displays all permissions ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-composite"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 9. Decorator -->
+            <div class="card st" data-cat="st" data-name="decorator">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">09</span>
+                    <span class="card-title">Decorator</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    Plain User → add Premium → add Verified. Instead of a new class
+                                    for each combination, wrap the object and stack features on top.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Add badges to user (Verified, Premium)</li>
+                                    <li>Express middleware pipeline</li>
+                                    <li>Add features without modifying the class</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — too many classes
+                            </div>
+                            <pre><span class="cm">// PremiumUser, VerifiedUser, PremiumVerifiedUser... 😩</span>
+<span class="kw">class</span> <span class="fn">PremiumVerifiedUser</span> <span class="kw">extends</span> <span class="fn">User</span> { }</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Decorator — wrap and extend
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">User</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">getInfo</span>() { <span class="kw">return</span> <span class="kw">this</span>.name; }
+}
+
+<span class="kw">class</span> <span class="fn">PremiumDecorator</span> {
+  <span class="fn">constructor</span>(user) { <span class="kw">this</span>.user = user; }
+  <span class="fn">getInfo</span>() { <span class="kw">return</span> <span class="kw">this</span>.user.<span class="fn">getInfo</span>() + <span class="str">" ⭐"</span>; }
+}
+<span class="kw">class</span> <span class="fn">VerifiedDecorator</span> {
+  <span class="fn">constructor</span>(user) { <span class="kw">this</span>.user = user; }
+  <span class="fn">getInfo</span>() { <span class="kw">return</span> <span class="kw">this</span>.user.<span class="fn">getInfo</span>() + <span class="str">" ✅"</span>; }
+}
+
+<span class="kw">let</span> user = <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ali"</span>);
+user = <span class="kw">new</span> <span class="fn">PremiumDecorator</span>(user);
+user = <span class="kw">new</span> <span class="fn">VerifiedDecorator</span>(user);
+user.<span class="fn">getInfo</span>(); <span class="cm">// "Ali ⭐ ✅" ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-decorator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 10. Facade -->
+            <div class="card st" data-cat="st" data-name="facade">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">10</span>
+                    <span class="card-title">Facade</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When a user registers, many things happen behind the scenes:
+                                    save to DB, send email, create session. Facade puts all that
+                                    behind one simple call.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>User registration / login flow</li>
+                                    <li>Checkout process</li>
+                                    <li>Simplify complex APIs</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — client manages everything
+                            </div>
+                            <pre><span class="cm">// All this inside the component?! 😩</span>
+db.<span class="fn">saveUser</span>(user);
+email.<span class="fn">sendWelcome</span>(user);
+session.<span class="fn">create</span>(user);
+logger.<span class="fn">log</span>(<span class="str">"registered"</span>);</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Facade — one call does everything
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">AuthFacade</span> {
+  <span class="fn">register</span>(userData) {
+    db.<span class="fn">saveUser</span>(userData);
+    email.<span class="fn">sendWelcome</span>(userData.email);
+    session.<span class="fn">create</span>(userData.id);
+    logger.<span class="fn">log</span>(<span class="str">"User registered: "</span> + userData.name);
+    <span class="kw">return</span> <span class="str">"✅ Welcome!"</span>;
+  }
+}
+
+<span class="kw">const</span> auth = <span class="kw">new</span> <span class="fn">AuthFacade</span>();
+auth.<span class="fn">register</span>({ name: <span class="str">"Ali"</span>, email: <span class="str">"ali@x.com"</span> });
+<span class="cm">// Simple and clean ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-facade"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 11. Flyweight -->
+            <div class="card st" data-cat="st" data-name="flyweight">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">11</span>
+                    <span class="card-title">Flyweight</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You have a million users and they all share the same country
+                                    data. Instead of duplicating that data a million times, share
+                                    one object between them all.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Country/City data shared between users</li>
+                                    <li>Shared avatars or icons</li>
+                                    <li>When memory matters</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — duplicating data
+                            </div>
+                            <pre><span class="cm">// Every user stores the same country data 😩</span>
+<span class="kw">const</span> users = [
+  { name:<span class="str">"Ali"</span>,   country: { name:<span class="str">"Egypt"</span>, code:<span class="str">"EG"</span>, flag:<span class="str">"🇪🇬"</span> } },
+  { name:<span class="str">"Ahmed"</span>, country: { name:<span class="str">"Egypt"</span>, code:<span class="str">"EG"</span>, flag:<span class="str">"🇪🇬"</span> } },
+  <span class="cm">// Same object duplicated a million times 😩</span>
+];</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Flyweight — share the shared data
+                            </div>
+                            <pre><span class="kw">const</span> CountryPool = {};
+<span class="kw">function</span> <span class="fn">getCountry</span>(code) {
+  <span class="kw">if</span> (!CountryPool[code]) {
+    CountryPool[code] = { name: <span class="str">"Egypt"</span>, code, flag: <span class="str">"🇪🇬"</span> };
+  }
+  <span class="kw">return</span> CountryPool[code]; <span class="cm">// same reference ✅</span>
+}
+
+<span class="kw">const</span> ali   = { name: <span class="str">"Ali"</span>,   country: <span class="fn">getCountry</span>(<span class="str">"EG"</span>) };
+<span class="kw">const</span> ahmed = { name: <span class="str">"Ahmed"</span>, country: <span class="fn">getCountry</span>(<span class="str">"EG"</span>) };
+console.<span class="fn">log</span>(ali.country === ahmed.country); <span class="cm">// true ✅ exact same object</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-flyweight"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 12. Proxy -->
+            <div class="card st" data-cat="st" data-name="proxy">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">12</span>
+                    <span class="card-title">Proxy</span>
+                    <span class="card-tag">STRUCTURAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    Before reaching user data, the Proxy checks: do you have
+                                    permission? It also caches results so you don't hit the DB every
+                                    time.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Access control on user data</li>
+                                    <li>Caching user profiles</li>
+                                    <li>Logging requests</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — every request hits the DB
+                            </div>
+                            <pre><span class="cm">// Every getUser() call makes a DB query 😩</span>
+<span class="kw">function</span> <span class="fn">getUser</span>(id) {
+  <span class="kw">return</span> db.<span class="fn">query</span>(<span class="str">`SELECT * FROM users WHERE id=<span class="kw">${id}</span>`</span>);
+}</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Proxy — cache + access control
+                            </div>
+                            <pre><span class="kw">const</span> UserProxy = {
+  cache: {},
+  <span class="fn">getUser</span>(id, requester) {
+    <span class="cm">// 1. Access Control</span>
+    <span class="kw">if</span> (!requester.isAdmin && requester.id !== id) {
+      <span class="kw">return</span> <span class="str">"❌ Access Denied"</span>;
+    }
+    <span class="cm">// 2. Cache</span>
+    <span class="kw">if</span> (<span class="kw">this</span>.cache[id]) {
+      console.<span class="fn">log</span>(<span class="str">"📦 From cache"</span>);
+      <span class="kw">return this</span>.cache[id];
+    }
+    <span class="kw">this</span>.cache[id] = db.<span class="fn">query</span>(id);
+    <span class="kw">return this</span>.cache[id];
+  }
+};
+<span class="cm">// Same interface, but smarter ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-proxy"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════
+     🟨  BEHAVIORAL PATTERNS
+══════════════════════════════════════════════ -->
+            <div class="section-header" data-cat-header="bh">
+                <span class="section-icon">🟨</span>
+                <h2 style="color: var(--bh)">Behavioral Patterns</h2>
+                <span class="section-count">11 patterns</span>
+            </div>
+
+            <!-- 13. Observer -->
+            <div class="card bh" data-cat="bh" data-name="observer">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">13</span>
+                    <span class="card-title">Observer</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When the user profile changes, you want the dashboard,
+                                    notifications, and header to all update automatically — without
+                                    each part knowing about the others.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>User profile update → notify all components</li>
+                                    <li>Chat messages (real-time)</li>
+                                    <li>DOM events (addEventListener)</li>
+                                    <li>State management (Redux)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — tight coupling
+                            </div>
+                            <pre><span class="cm">// Must know and call every component manually 😩</span>
+<span class="kw">function</span> <span class="fn">updateProfile</span>(user) {
+  dashboard.<span class="fn">refresh</span>(user);
+  header.<span class="fn">update</span>(user);
+  notifications.<span class="fn">push</span>(user);
+}</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Observer — subscribe and be notified
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">UserStore</span> {
+  <span class="fn">constructor</span>() { <span class="kw">this</span>.listeners = []; }
+  <span class="fn">subscribe</span>(fn) { <span class="kw">this</span>.listeners.<span class="fn">push</span>(fn); }
+  <span class="fn">updateProfile</span>(data) {
+    <span class="cm">// notifies all subscribers 🔔</span>
+    <span class="kw">this</span>.listeners.<span class="fn">forEach</span>(fn => <span class="fn">fn</span>(data));
+  }
+}
+
+<span class="kw">const</span> store = <span class="kw">new</span> <span class="fn">UserStore</span>();
+store.<span class="fn">subscribe</span>(u => console.<span class="fn">log</span>(<span class="str">"Header: "</span>    + u.name));
+store.<span class="fn">subscribe</span>(u => console.<span class="fn">log</span>(<span class="str">"Dashboard: "</span> + u.name));
+store.<span class="fn">updateProfile</span>({ name: <span class="str">"Ali Updated"</span> }); <span class="cm">// both notified ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-observer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 14. Strategy -->
+            <div class="card bh" data-cat="bh" data-name="strategy">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">14</span>
+                    <span class="card-title">Strategy</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    A user wants to log in using Email, Google, or Facebook. Instead
+                                    of a giant if/else, each method becomes an independent strategy.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Login strategies (Email/Google/Facebook)</li>
+                                    <li>Different payment methods</li>
+                                    <li>Sorting algorithms</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — giant if/else
+                            </div>
+                            <pre><span class="kw">function</span> <span class="fn">login</span>(method, data) {
+  <span class="kw">if</span>      (method === <span class="str">"email"</span>)    { <span class="cm">/* ... */</span> }
+  <span class="kw">else if</span> (method === <span class="str">"google"</span>)   { <span class="cm">/* ... */</span> }
+  <span class="kw">else if</span> (method === <span class="str">"facebook"</span>) { <span class="cm">/* ... */</span> }
+  <span class="cm">// Add Apple login? Must edit this function 😩</span>
+}</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Strategy — plug and play
+                            </div>
+                            <pre><span class="kw">const</span> EmailLogin    = { <span class="fn">auth</span>(d) { <span class="kw">return</span> <span class="str">"📧 Email: "</span>    +d.email; } };
+<span class="kw">const</span> GoogleLogin   = { <span class="fn">auth</span>(d) { <span class="kw">return</span> <span class="str">"🔵 Google: "</span>   +d.token; } };
+<span class="kw">const</span> FacebookLogin = { <span class="fn">auth</span>(d) { <span class="kw">return</span> <span class="str">"🔷 Facebook: "</span> +d.token; } };
+
+<span class="kw">class</span> <span class="fn">AuthService</span> {
+  <span class="fn">constructor</span>(strategy) { <span class="kw">this</span>.strategy = strategy; }
+  <span class="fn">setStrategy</span>(s) { <span class="kw">this</span>.strategy = s; }
+  <span class="fn">login</span>(data) { <span class="kw">return this</span>.strategy.<span class="fn">auth</span>(data); }
+}
+
+<span class="kw">const</span> auth = <span class="kw">new</span> <span class="fn">AuthService</span>(EmailLogin);
+auth.<span class="fn">login</span>({ email: <span class="str">"ali@x.com"</span> }); <span class="cm">// 📧 Email ✅</span>
+auth.<span class="fn">setStrategy</span>(GoogleLogin);
+auth.<span class="fn">login</span>({ token: <span class="str">"abc"</span> });          <span class="cm">// 🔵 Google ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-strategy"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 15. Command -->
+            <div class="card bh" data-cat="bh" data-name="command">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">15</span>
+                    <span class="card-title">Command</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    User changed their name — you want undo to restore the old name.
+                                    Command saves every action as an object with execute() and
+                                    undo().
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Undo/Redo for profile editing</li>
+                                    <li>Save edit history</li>
+                                    <li>Queue of actions</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Command — every action is undoable
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">UpdateNameCommand</span> {
+  <span class="fn">constructor</span>(user, newName) {
+    <span class="kw">this</span>.user    = user;
+    <span class="kw">this</span>.newName = newName;
+    <span class="kw">this</span>.oldName = user.name; <span class="cm">// save old value for undo</span>
+  }
+  <span class="fn">execute</span>() { <span class="kw">this</span>.user.name = <span class="kw">this</span>.newName; }
+  <span class="fn">undo</span>()    { <span class="kw">this</span>.user.name = <span class="kw">this</span>.oldName; }
+}
+
+<span class="kw">const</span> user    = { name: <span class="str">"Ali"</span> };
+<span class="kw">const</span> history = [];
+
+<span class="kw">const</span> cmd = <span class="kw">new</span> <span class="fn">UpdateNameCommand</span>(user, <span class="str">"Ahmed"</span>);
+cmd.<span class="fn">execute</span>(); history.<span class="fn">push</span>(cmd);
+console.<span class="fn">log</span>(user.name); <span class="cm">// "Ahmed"</span>
+
+history.<span class="fn">pop</span>().<span class="fn">undo</span>();
+console.<span class="fn">log</span>(user.name); <span class="cm">// "Ali" ← restored ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-command"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 16. Iterator -->
+            <div class="card bh" data-cat="bh" data-name="iterator">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">16</span>
+                    <span class="card-title">Iterator</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You have a Users Collection that might be an array, linked list,
+                                    or paginated API. Iterator gives you a consistent way to loop
+                                    without knowing the internal structure.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Paginated users list</li>
+                                    <li>Custom collection traversal</li>
+                                    <li>JS for...of on custom objects</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Iterator — consistent loop interface
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">UserCollection</span> {
+  <span class="fn">constructor</span>() { <span class="kw">this</span>.users = []; }
+  <span class="fn">add</span>(u) { <span class="kw">this</span>.users.<span class="fn">push</span>(u); }
+
+  [Symbol.iterator]() {
+    <span class="kw">let</span> i = <span class="num">0</span>;
+    <span class="kw">const</span> users = <span class="kw">this</span>.users;
+    <span class="kw">return</span> {
+      <span class="fn">next</span>() {
+        <span class="kw">return</span> i < users.length
+          ? { value: users[i++], done: <span class="kw">false</span> }
+          : { done: <span class="kw">true</span> };
+      }
+    };
+  }
+}
+
+<span class="kw">const</span> list = <span class="kw">new</span> <span class="fn">UserCollection</span>();
+list.<span class="fn">add</span>({ name: <span class="str">"Ali"</span>   });
+list.<span class="fn">add</span>({ name: <span class="str">"Ahmed"</span> });
+
+<span class="kw">for</span> (<span class="kw">const</span> user <span class="kw">of</span> list) {
+  console.<span class="fn">log</span>(user.name); <span class="cm">// Ali, Ahmed ✅</span>
+}</pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-iterator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 17. Mediator -->
+            <div class="card bh" data-cat="bh" data-name="mediator">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">17</span>
+                    <span class="card-title">Mediator</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    In a chat, every user needs to talk to every other user — chaos!
+                                    Instead, everything goes through the ChatRoom which distributes
+                                    messages.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Chat room / group messaging</li>
+                                    <li>Event bus between components</li>
+                                    <li>Air traffic control</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Mediator — ChatRoom is the hub
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">ChatRoom</span> {
+  <span class="fn">constructor</span>() { <span class="kw">this</span>.users = []; }
+  <span class="fn">join</span>(user) { <span class="kw">this</span>.users.<span class="fn">push</span>(user); user.room = <span class="kw">this</span>; }
+  <span class="fn">send</span>(msg, sender) {
+    <span class="kw">this</span>.users
+      .<span class="fn">filter</span>(u => u !== sender)
+      .<span class="fn">forEach</span>(u => u.<span class="fn">receive</span>(<span class="str">`<span class="kw">${sender.name}</span>: <span class="kw">${msg}</span>`</span>));
+  }
+}
+
+<span class="kw">class</span> <span class="fn">User</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">send</span>(msg)    { <span class="kw">this</span>.room.<span class="fn">send</span>(msg, <span class="kw">this</span>); }
+  <span class="fn">receive</span>(msg) { console.<span class="fn">log</span>(<span class="str">"📩 "</span> + msg); }
+}
+
+<span class="kw">const</span> room = <span class="kw">new</span> <span class="fn">ChatRoom</span>();
+<span class="kw">const</span> ali   = <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ali"</span>);
+<span class="kw">const</span> ahmed = <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ahmed"</span>);
+room.<span class="fn">join</span>(ali); room.<span class="fn">join</span>(ahmed);
+ali.<span class="fn">send</span>(<span class="str">"Hello everyone!"</span>); <span class="cm">// 📩 Ali: Hello everyone! ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-mediator"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 18. Memento -->
+            <div class="card bh" data-cat="bh" data-name="memento">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">18</span>
+                    <span class="card-title">Memento</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    A user edits their profile — you want them to be able to restore
+                                    any previous version. Memento saves snapshots of the state.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Profile edit history</li>
+                                    <li>Form autosave / draft</li>
+                                    <li>Game save states</li>
+                                    <li>Ctrl+Z undo</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Memento — save & restore profile
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">UserProfile</span> {
+  <span class="fn">constructor</span>(name, bio) { <span class="kw">this</span>.name=name; <span class="kw">this</span>.bio=bio; }
+  <span class="fn">save</span>()    { <span class="kw">return</span> { name:<span class="kw">this</span>.name, bio:<span class="kw">this</span>.bio }; }
+  <span class="fn">restore</span>(s){ <span class="kw">this</span>.name=s.name; <span class="kw">this</span>.bio=s.bio; }
+}
+
+<span class="kw">const</span> profile  = <span class="kw">new</span> <span class="fn">UserProfile</span>(<span class="str">"Ali"</span>, <span class="str">"Developer"</span>);
+<span class="kw">const</span> snapshots = [];
+
+snapshots.<span class="fn">push</span>(profile.<span class="fn">save</span>()); <span class="cm">// save before editing</span>
+
+profile.name = <span class="str">"Ali Ahmed"</span>;
+profile.bio  = <span class="str">"Senior Developer"</span>;
+console.<span class="fn">log</span>(profile.name); <span class="cm">// "Ali Ahmed"</span>
+
+profile.<span class="fn">restore</span>(snapshots.<span class="fn">pop</span>());
+console.<span class="fn">log</span>(profile.name); <span class="cm">// "Ali" ← restored ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-memento"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 19. State -->
+            <div class="card bh" data-cat="bh" data-name="state">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">19</span>
+                    <span class="card-title">State</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    A user account has states: Active, Banned, Pending. When they
+                                    take an action, the behavior changes based on the current state
+                                    — no if/else needed.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>User account status</li>
+                                    <li>Order status (pending/shipped/delivered)</li>
+                                    <li>Traffic light</li>
+                                    <li>Media player (play/pause/stop)</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — if/else everywhere
+                            </div>
+                            <pre><span class="kw">function</span> <span class="fn">doAction</span>(user) {
+  <span class="kw">if</span>      (user.status === <span class="str">"active"</span>)  { <span class="cm">/* ... */</span> }
+  <span class="kw">else if</span> (user.status === <span class="str">"banned"</span>)  { <span class="cm">/* ... */</span> }
+  <span class="kw">else if</span> (user.status === <span class="str">"pending"</span>) { <span class="cm">/* ... */</span> }
+}</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ State — each state handles itself
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">ActiveState</span> {
+  <span class="fn">login</span>()  { <span class="kw">return</span> <span class="str">"✅ Welcome back!"</span>;     }
+  <span class="fn">post</span>()   { <span class="kw">return</span> <span class="str">"📝 Post published!"</span>;   }
+}
+<span class="kw">class</span> <span class="fn">BannedState</span> {
+  <span class="fn">login</span>()  { <span class="kw">return</span> <span class="str">"❌ Account banned!"</span>;   }
+  <span class="fn">post</span>()   { <span class="kw">return</span> <span class="str">"❌ Cannot post!"</span>;       }
+}
+<span class="kw">class</span> <span class="fn">PendingState</span> {
+  <span class="fn">login</span>()  { <span class="kw">return</span> <span class="str">"⏳ Verify email first"</span>; }
+  <span class="fn">post</span>()   { <span class="kw">return</span> <span class="str">"⏳ Not activated yet"</span>;  }
+}
+
+<span class="kw">class</span> <span class="fn">UserAccount</span> {
+  <span class="fn">constructor</span>() { <span class="kw">this</span>.state = <span class="kw">new</span> <span class="fn">PendingState</span>(); }
+  <span class="fn">setState</span>(s)   { <span class="kw">this</span>.state = s; }
+  <span class="fn">login</span>()       { <span class="kw">return this</span>.state.<span class="fn">login</span>(); }
+  <span class="fn">post</span>()        { <span class="kw">return this</span>.state.<span class="fn">post</span>(); }
+}
+
+<span class="kw">const</span> acc = <span class="kw">new</span> <span class="fn">UserAccount</span>();
+acc.<span class="fn">login</span>();                          <span class="cm">// ⏳ Verify email</span>
+acc.<span class="fn">setState</span>(<span class="kw">new</span> <span class="fn">ActiveState</span>());
+acc.<span class="fn">login</span>();                          <span class="cm">// ✅ Welcome back! ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-state"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 20. Template Method -->
+            <div class="card bh" data-cat="bh" data-name="template method">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">20</span>
+                    <span class="card-title">Template Method</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    All user types log in with the same steps (validate →
+                                    authenticate → log) but each type implements each step its own
+                                    way.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Login flow for different user types</li>
+                                    <li>Export report (same steps, different formats)</li>
+                                    <li>Build pipelines</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Template Method — same flow, different steps
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">LoginTemplate</span> {
+  <span class="fn">login</span>(data) { <span class="cm">// the template — never changes</span>
+    <span class="kw">this</span>.<span class="fn">validate</span>(data);
+    <span class="kw">this</span>.<span class="fn">authenticate</span>(data);
+    <span class="kw">this</span>.<span class="fn">logSuccess</span>(data);
+  }
+  <span class="fn">logSuccess</span>(d){ console.<span class="fn">log</span>(<span class="str">"✅ Logged: "</span>+d.user); } <span class="cm">// default</span>
+  <span class="fn">validate</span>()    { <span class="kw">throw</span> <span class="str">"implement validate"</span>; }
+  <span class="fn">authenticate</span>(){ <span class="kw">throw</span> <span class="str">"implement authenticate"</span>; }
+}
+
+<span class="kw">class</span> <span class="fn">EmailLogin</span> <span class="kw">extends</span> <span class="fn">LoginTemplate</span> {
+  <span class="fn">validate</span>(d)      { console.<span class="fn">log</span>(<span class="str">"📧 Validate email: "</span>+d.email); }
+  <span class="fn">authenticate</span>(d)  { console.<span class="fn">log</span>(<span class="str">"🔑 Check password"</span>); }
+}
+<span class="kw">class</span> <span class="fn">GoogleLogin</span> <span class="kw">extends</span> <span class="fn">LoginTemplate</span> {
+  <span class="fn">validate</span>(d)      { console.<span class="fn">log</span>(<span class="str">"🔵 Validate token: "</span>+d.token); }
+  <span class="fn">authenticate</span>(d)  { console.<span class="fn">log</span>(<span class="str">"🔵 Verify with Google"</span>); }
+}
+
+<span class="kw">new</span> <span class="fn">EmailLogin</span>().<span class="fn">login</span>({ email:<span class="str">"ali@x.com"</span>, user:<span class="str">"Ali"</span> }); <span class="cm">// ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-template-method"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 21. Chain of Responsibility -->
+            <div class="card bh" data-cat="bh" data-name="chain of responsibility">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">21</span>
+                    <span class="card-title">Chain of Responsibility</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    When a user sends a request, it passes through checkpoints: Are
+                                    they logged in? Do they have permission? Is the data valid? Each
+                                    checkpoint decides to handle or pass along.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Auth → Permission → Validation</li>
+                                    <li>Express.js middleware</li>
+                                    <li>Support ticket escalation</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Chain — each check is independent
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">Middleware</span> {
+  <span class="fn">setNext</span>(m) { <span class="kw">this</span>.next = m; <span class="kw">return</span> m; }
+  <span class="fn">handle</span>(req) { <span class="kw">return this</span>.next?.<span class="fn">handle</span>(req); }
+}
+
+<span class="kw">class</span> <span class="fn">AuthCheck</span> <span class="kw">extends</span> <span class="fn">Middleware</span> {
+  <span class="fn">handle</span>(req) {
+    <span class="kw">if</span> (!req.user) <span class="kw">return</span> <span class="str">"❌ Login first!"</span>;
+    <span class="kw">return super</span>.<span class="fn">handle</span>(req);
+  }
+}
+<span class="kw">class</span> <span class="fn">AdminCheck</span> <span class="kw">extends</span> <span class="fn">Middleware</span> {
+  <span class="fn">handle</span>(req) {
+    <span class="kw">if</span> (!req.user.isAdmin) <span class="kw">return</span> <span class="str">"❌ Admins only!"</span>;
+    <span class="kw">return super</span>.<span class="fn">handle</span>(req);
+  }
+}
+<span class="kw">class</span> <span class="fn">Handler</span> <span class="kw">extends</span> <span class="fn">Middleware</span> {
+  <span class="fn">handle</span>() { <span class="kw">return</span> <span class="str">"✅ Welcome Admin!"</span>; }
+}
+
+<span class="kw">const</span> chain = <span class="kw">new</span> <span class="fn">AuthCheck</span>();
+chain.<span class="fn">setNext</span>(<span class="kw">new</span> <span class="fn">AdminCheck</span>()).<span class="fn">setNext</span>(<span class="kw">new</span> <span class="fn">Handler</span>());
+chain.<span class="fn">handle</span>({ user: { name:<span class="str">"Ali"</span>, isAdmin:<span class="kw">true</span> } }); <span class="cm">// ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-chain"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 22. Visitor -->
+            <div class="card bh" data-cat="bh" data-name="visitor">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">22</span>
+                    <span class="card-title">Visitor</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You have different user types (FreeUser, PremiumUser) and want
+                                    to perform operations on them (export, report, discount) without
+                                    modifying the user classes.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Reports across different user types</li>
+                                    <li>Export in different formats</li>
+                                    <li>Add operations without changing classes</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Visitor — operations from outside
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">FreeUser</span>    { <span class="fn">accept</span>(v){ v.<span class="fn">visitFree</span>(<span class="kw">this</span>); }; name=<span class="str">"Ali"</span>; }
+<span class="kw">class</span> <span class="fn">PremiumUser</span> { <span class="fn">accept</span>(v){ v.<span class="fn">visitPremium</span>(<span class="kw">this</span>); }; name=<span class="str">"Ahmed"</span>; }
+
+<span class="cm">// New visitor without touching the classes</span>
+<span class="kw">class</span> <span class="fn">DiscountVisitor</span> {
+  <span class="fn">visitFree</span>(u)    { console.<span class="fn">log</span>(<span class="str">`<span class="kw">${u.name}</span>: 10% discount 🎁`</span>); }
+  <span class="fn">visitPremium</span>(u) { console.<span class="fn">log</span>(<span class="str">`<span class="kw">${u.name}</span>: 30% discount 🎁`</span>); }
+}
+<span class="kw">class</span> <span class="fn">ReportVisitor</span> {
+  <span class="fn">visitFree</span>(u)    { console.<span class="fn">log</span>(<span class="str">`<span class="kw">${u.name}</span>: Free plan 📊`</span>); }
+  <span class="fn">visitPremium</span>(u) { console.<span class="fn">log</span>(<span class="str">`<span class="kw">${u.name}</span>: Premium plan 📊`</span>); }
+}
+
+<span class="kw">const</span> users = [<span class="kw">new</span> <span class="fn">FreeUser</span>(), <span class="kw">new</span> <span class="fn">PremiumUser</span>()];
+users.<span class="fn">forEach</span>(u => u.<span class="fn">accept</span>(<span class="kw">new</span> <span class="fn">DiscountVisitor</span>())); <span class="cm">// ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-visitor"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 23. Interpreter -->
+            <div class="card bh" data-cat="bh" data-name="interpreter">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">23</span>
+                    <span class="card-title">Interpreter</span>
+                    <span class="card-tag">BEHAVIORAL</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    User types a search query like "name=Ali AND age>20" — you need
+                                    to understand and translate that text into a real filter.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>User search / filter queries</li>
+                                    <li>SQL parser</li>
+                                    <li>Template engine</li>
+                                    <li>Math expression calculator</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Interpreter — translate the expression
+                            </div>
+                            <pre><span class="cm">// Simple filter system for users</span>
+<span class="kw">class</span> <span class="fn">NameFilter</span> {
+  <span class="fn">constructor</span>(name) { <span class="kw">this</span>.name = name; }
+  <span class="fn">interpret</span>(users) {
+    <span class="kw">return</span> users.<span class="fn">filter</span>(u => u.name === <span class="kw">this</span>.name);
+  }
+}
+<span class="kw">class</span> <span class="fn">AgeFilter</span> {
+  <span class="fn">constructor</span>(min) { <span class="kw">this</span>.min = min; }
+  <span class="fn">interpret</span>(users) {
+    <span class="kw">return</span> users.<span class="fn">filter</span>(u => u.age > <span class="kw">this</span>.min);
+  }
+}
+<span class="kw">class</span> <span class="fn">AndFilter</span> {
+  <span class="fn">constructor</span>(a, b) { <span class="kw">this</span>.a=a; <span class="kw">this</span>.b=b; }
+  <span class="fn">interpret</span>(users) {
+    <span class="kw">return this</span>.b.<span class="fn">interpret</span>(<span class="kw">this</span>.a.<span class="fn">interpret</span>(users));
+  }
+}
+
+<span class="kw">const</span> users = [
+  { name:<span class="str">"Ali"</span>,   age:<span class="num">25</span> },
+  { name:<span class="str">"Ali"</span>,   age:<span class="num">17</span> },
+  { name:<span class="str">"Ahmed"</span>, age:<span class="num">30</span> }
+];
+<span class="cm">// "name=Ali AND age>20"</span>
+<span class="kw">const</span> query = <span class="kw">new</span> <span class="fn">AndFilter</span>(<span class="kw">new</span> <span class="fn">NameFilter</span>(<span class="str">"Ali"</span>), <span class="kw">new</span> <span class="fn">AgeFilter</span>(<span class="num">20</span>));
+query.<span class="fn">interpret</span>(users); <span class="cm">// [{ name:"Ali", age:25 }] ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-interpreter"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ══════════════════════════════════════════════
+     ⬜  JAVASCRIPT PATTERNS
+══════════════════════════════════════════════ -->
+            <div class="section-header" data-cat-header="js">
+                <span class="section-icon">⬜</span>
+                <h2 style="color: #a78bfa">JavaScript Patterns</h2>
+                <span class="section-count">4 patterns</span>
+            </div>
+
+            <!-- 24. Constructor -->
+            <div class="card js" data-cat="js" data-name="constructor">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">24</span>
+                    <span class="card-title">Constructor Pattern</span>
+                    <span class="card-tag">JS PATTERN</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    You want to create many users all with the same shape — same
+                                    properties and same methods. Constructor gives you a blueprint
+                                    to stamp out instances.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Create many users from the same template</li>
+                                    <li>OOP in JavaScript</li>
+                                    <li>Add methods on the prototype</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — repetition everywhere
+                            </div>
+                            <pre><span class="cm">// Every user requires writing the same methods again 😩</span>
+<span class="kw">const</span> ali   = { name:<span class="str">"Ali"</span>,   greet() { <span class="kw">return</span> <span class="str">"Hi, I'm Ali"</span>;   } };
+<span class="kw">const</span> ahmed = { name:<span class="str">"Ahmed"</span>, greet() { <span class="kw">return</span> <span class="str">"Hi, I'm Ahmed"</span>; } };</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Constructor — one blueprint for all
+                            </div>
+                            <pre><span class="cm">// function constructor (old way)</span>
+<span class="kw">function</span> <span class="fn">User</span>(name, age) {
+  <span class="kw">this</span>.name = name;
+  <span class="kw">this</span>.age  = age;
+}
+<span class="cm">// method on prototype (shared by all instances)</span>
+User.prototype.<span class="fn">greet</span> = <span class="kw">function</span>() {
+  <span class="kw">return</span> <span class="str">`Hi, I'm <span class="kw">${this.name}</span>!`</span>;
+};
+
+<span class="cm">// class syntax (modern way — same idea)</span>
+<span class="kw">class</span> <span class="fn">User</span> {
+  <span class="fn">constructor</span>(name, age) { <span class="kw">this</span>.name=name; <span class="kw">this</span>.age=age; }
+  <span class="fn">greet</span>() { <span class="kw">return</span> <span class="str">`Hi, I'm <span class="kw">${this.name}</span>!`</span>; }
+}
+
+<span class="kw">const</span> ali   = <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ali"</span>,   <span class="num">25</span>);
+<span class="kw">const</span> ahmed = <span class="kw">new</span> <span class="fn">User</span>(<span class="str">"Ahmed"</span>, <span class="num">30</span>);
+ali.<span class="fn">greet</span>();   <span class="cm">// "Hi, I'm Ali!" ✅</span>
+ahmed.<span class="fn">greet</span>(); <span class="cm">// "Hi, I'm Ahmed!" ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-constructor"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 25. Module -->
+            <div class="card js" data-cat="js" data-name="module">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">25</span>
+                    <span class="card-title">Module Pattern</span>
+                    <span class="card-tag">JS PATTERN</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    Sensitive user data (like passwords) shouldn't be visible or
+                                    editable from outside. Module hides private data and only
+                                    exposes what's needed.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Hide sensitive data</li>
+                                    <li>Encapsulation in JS</li>
+                                    <li>Organize code into units</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — everything is public
+                            </div>
+                            <pre><span class="kw">let</span> userName     = <span class="str">"Ali"</span>;
+<span class="kw">let</span> userPassword = <span class="str">"1234"</span>; <span class="cm">// Anyone can read and modify it! 😩</span>
+userName = <span class="str">"Hacker"</span>; <span class="cm">// so easy to tamper with</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Module — private + public
+                            </div>
+                            <pre><span class="kw">const</span> <span class="fn">UserModule</span> = (<span class="kw">function</span>() {
+  <span class="cm">// ❌ private — not accessible from outside</span>
+  <span class="kw">let</span> _password = <span class="str">"1234"</span>;
+  <span class="kw">let</span> _name     = <span class="str">"Ali"</span>;
+
+  <span class="cm">// ✅ public — this is what we expose</span>
+  <span class="kw">return</span> {
+    <span class="fn">getName</span>() { <span class="kw">return</span> _name; },
+    <span class="fn">setName</span>(n) {
+      <span class="kw">if</span> (n.length > <span class="num">2</span>) _name = n; <span class="cm">// validation</span>
+    },
+    <span class="fn">checkPassword</span>(p) { <span class="kw">return</span> p === _password; }
+  };
+})();
+
+UserModule.<span class="fn">getName</span>();         <span class="cm">// "Ali" ✅</span>
+UserModule._password;          <span class="cm">// undefined ✅ (protected by closure!)</span>
+UserModule.<span class="fn">checkPassword</span>(<span class="str">"1234"</span>); <span class="cm">// true ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-module"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 26. Revealing Module -->
+            <div class="card js" data-cat="js" data-name="revealing module">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">26</span>
+                    <span class="card-title">Revealing Module</span>
+                    <span class="card-tag">JS PATTERN</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    An improvement on Module Pattern — instead of writing some
+                                    functions inside the return and others outside, write everything
+                                    inside and only "reveal" what you want.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>When you want all code organized in one place</li>
+                                    <li>Easier to read and maintain</li>
+                                    <li>Clearly define what is public and what is private</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Regular Module — functions split across two places
+                            </div>
+                            <pre><span class="kw">const</span> <span class="fn">UserModule</span> = (<span class="kw">function</span>() {
+  <span class="kw">let</span> name = <span class="str">"Ali"</span>;
+  <span class="kw">function</span> <span class="fn">validate</span>(n) { <span class="kw">return</span> n.length > <span class="num">2</span>; } <span class="cm">// private here</span>
+  <span class="kw">return</span> {
+    <span class="fn">setName</span>(n) { <span class="cm">// public here — two different places 😕</span>
+      <span class="kw">if</span> (<span class="fn">validate</span>(n)) name = n;
+    }
+  };
+})();</pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Revealing Module — everything in one place
+                            </div>
+                            <pre><span class="kw">const</span> <span class="fn">UserProfile</span> = (<span class="kw">function</span>() {
+  <span class="kw">let</span> _name  = <span class="str">"Ali"</span>;
+  <span class="kw">let</span> _email = <span class="str">"ali@x.com"</span>;
+
+  <span class="kw">function</span> <span class="fn">_validate</span>(n) { <span class="kw">return</span> n.length > <span class="num">2</span>; }
+
+  <span class="kw">function</span> <span class="fn">getName</span>()   { <span class="kw">return</span> _name; }
+  <span class="kw">function</span> <span class="fn">getEmail</span>()  { <span class="kw">return</span> _email; }
+  <span class="kw">function</span> <span class="fn">setName</span>(n)  { <span class="kw">if</span> (<span class="fn">_validate</span>(n)) _name = n; }
+
+  <span class="cm">// ✅ only here you define what gets revealed</span>
+  <span class="kw">return</span> { getName, getEmail, setName };
+})();
+
+UserProfile.<span class="fn">getName</span>();          <span class="cm">// "Ali" ✅</span>
+UserProfile.<span class="fn">setName</span>(<span class="str">"Ahmed"</span>);
+UserProfile.<span class="fn">getName</span>();          <span class="cm">// "Ahmed" ✅</span>
+UserProfile._validate;            <span class="cm">// undefined ✅ (private)</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-revealing-module"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 27. Mixin -->
+            <div class="card js" data-cat="js" data-name="mixin">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <span class="card-num">27</span>
+                    <span class="card-title">Mixin Pattern</span>
+                    <span class="card-tag">JS PATTERN</span>
+                    <span class="card-chevron">▼</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-body-inner">
+                        <div class="info-grid">
+                            <div class="info-box">
+                                <h4>🎯 PROBLEM IT SOLVES</h4>
+                                <p>
+                                    User and Admin share behaviors (canLogin, canPost) but you don't
+                                    want complex inheritance. Mixin adds behaviors to any class
+                                    without using extends.
+                                </p>
+                            </div>
+                            <div class="info-box">
+                                <h4>💡 WHEN TO USE</h4>
+                                <ul>
+                                    <li>Add behaviors to different classes</li>
+                                    <li>When JS single inheritance limits you</li>
+                                    <li>Reusable behaviors without inheritance</li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-bad"></span>
+                                ❌ Problem — code duplication
+                            </div>
+                            <pre><span class="kw">class</span> <span class="fn">User</span>  { <span class="fn">canLogin</span>() {<span class="cm">/* same code */</span>} <span class="fn">canPost</span>(){<span class="cm">/* same code */</span>} }
+<span class="kw">class</span> <span class="fn">Admin</span> { <span class="fn">canLogin</span>() {<span class="cm">/* same code */</span>} <span class="fn">canPost</span>(){<span class="cm">/* same code */</span>} }
+<span class="cm">// Same code copy-pasted everywhere 😩</span></pre>
+                        </div>
+                        <div class="code-section">
+                            <div class="code-label">
+                                <span class="code-dot dot-good"></span>
+                                ✅ Mixin — share behaviors
+                            </div>
+                            <pre><span class="cm">// Mixin — reusable behaviors</span>
+<span class="kw">const</span> UserMixin = {
+  <span class="fn">canLogin</span>() { <span class="kw">return</span> <span class="str">`✅ <span class="kw">${this.name}</span> logged in`</span>; },
+  <span class="fn">canPost</span>()  { <span class="kw">return</span> <span class="str">`📝 <span class="kw">${this.name}</span> posted`</span>;   },
+  <span class="fn">getProfile</span>(){ <span class="kw">return</span> <span class="str">`👤 <span class="kw">${this.name}</span> - <span class="kw">${this.role}</span>`</span>; }
+};
+
+<span class="kw">class</span> <span class="fn">NormalUser</span> { <span class="fn">constructor</span>(name){ <span class="kw">this</span>.name=name; <span class="kw">this</span>.role=<span class="str">"user"</span>;  } }
+<span class="kw">class</span> <span class="fn">AdminUser</span>  { <span class="fn">constructor</span>(name){ <span class="kw">this</span>.name=name; <span class="kw">this</span>.role=<span class="str">"admin"</span>; } }
+
+<span class="cm">// Add the Mixin to both classes</span>
+Object.<span class="fn">assign</span>(NormalUser.prototype, UserMixin);
+Object.<span class="fn">assign</span>(AdminUser.prototype,  UserMixin);
+
+<span class="kw">const</span> ali   = <span class="kw">new</span> <span class="fn">NormalUser</span>(<span class="str">"Ali"</span>);
+<span class="kw">const</span> admin = <span class="kw">new</span> <span class="fn">AdminUser</span>(<span class="str">"Ahmed"</span>);
+ali.<span class="fn">canLogin</span>();    <span class="cm">// Ali logged in ✅</span>
+admin.<span class="fn">getProfile</span>(); <span class="cm">// 👤 Ahmed - admin ✅</span></pre>
+                        </div>
+                        <div class="quiz-section">
+                            <div class="quiz-title">// INTERVIEW QUESTIONS</div>
+                            <div id="quiz-mixin"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <div class="stats" id="statsBar">
+            <div class="stat-item">
+                Answered:
+                <strong id="statAnswered">0</strong>
+            </div>
+            <div class="stat-item">
+                Correct:
+                <strong id="statCorrect" style="color: #22c55e">0</strong>
+            </div>
+            <div class="stat-item">
+                Patterns:
+                <strong id="statOpen">0</strong>
+                /27
+            </div>
+        </div>
+
+        <!-- ─── FLOATING ACTION BAR ──────────────────────────── -->
+        <div class="fab-bar">
+            <button class="fab-btn" onclick="expandAll()">⬇ All</button>
+            <button class="fab-btn" onclick="collapseAll()">⬆ Close</button>
+            <div class="score-ring-wrap" title="Quiz Score">
+                <svg width="52" height="52" viewBox="0 0 52 52">
+                    <circle
+                        cx="26"
+                        cy="26"
+                        r="20"
+                        fill="none"
+                        stroke="var(--border)"
+                        stroke-width="4"
+                    />
+                    <circle
+                        id="scoreRing"
+                        cx="26"
+                        cy="26"
+                        r="20"
+                        fill="none"
+                        stroke="url(#ringGrad)"
+                        stroke-width="4"
+                        stroke-dasharray="125.66"
+                        stroke-dashoffset="125.66"
+                        stroke-linecap="round"
+                        transform="rotate(-90 26 26)"
+                        style="transition: stroke-dashoffset 0.5s ease"
+                    />
+                    <defs>
+                        <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="var(--cr)" />
+                            <stop offset="50%" stop-color="var(--st)" />
+                            <stop offset="100%" stop-color="#a78bfa" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <span id="scoreLabel" class="score-label">0%</span>
+            </div>
+        </div>
+
+        <!-- ─── Footer ──────────────────────────── -->
+        <footer class="dp-footer">
+            <div class="dp-footer-logo">Design Patterns</div>
+            <div class="dp-footer-divider"></div>
+            <div class="dp-footer-badges">
+                <span class="dp-badge cr">🟦 Creational · 5</span>
+                <span class="dp-badge st">🟩 Structural · 7</span>
+                <span class="dp-badge bh">🟨 Behavioral · 11</span>
+                <span class="dp-badge js">⬜ JS Patterns · 4</span>
+            </div>
+            <div class="dp-footer-copy">
+                27 Patterns &nbsp;·&nbsp; 135 Interview Questions
+                <br />
+                <br />
+                <span id="dp-year"></span>
+                <br />
+                <br />
+                Designed with
+                <span class="dp-heart">♥</span>
+                by
+
+                <div class="dp-author">
+                    <a href="https://mahmoud-elsheikh.vercel.app" target="_blank" rel="noopener noreferrer">
+                        Mahmoud Elsheikh
+                    </a>
+                </div>
+            </div>
+            <p class="dp-footer-sub">// made for developers, by a developer</p>
+        </footer>
+
+        <script src="main.js"></script>
+    </body>
+</html>
